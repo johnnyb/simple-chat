@@ -5,4 +5,11 @@ It basically just provides an interactive OpenAI chat.
 
 To run it, do the following:
 
+```
 OPENAI_API_KEY=yourkeyhere ./simplechat.rb
+```
+
+Put in `--help` to see the options.
+
+
+

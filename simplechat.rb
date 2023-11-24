@@ -16,6 +16,7 @@ headers = {
 model = "gpt-4"
 system_message = "You are a helpful assistant."
 logdir = ""
+chatnum = rand(10000)
 
 OptionParser.new do |parser|
 	parser.on("-m", "--model MODELNAME", "specifies a specific model to use") do |m|
@@ -41,13 +42,13 @@ messages = [
 ]
 
 promptcount = 1
+puts "Chat ##{chatnum}"
 print "#{promptcount}) "
 
 
-def logreq(logdir, url, req, resp)
+def logreq(logdir, chatnum, promptnum, url, req, resp)
 	return if logdir == nil || logdir == ""
-	t = Time.now.to_i
-	File.open("#{logdir}/chat_#{t}.log", "w+") do |fh|
+	File.open("#{logdir}/chat_#{chatnum}_#{promptnum}.log", "w+") do |fh|
 		fh.puts(url)
 		fh.puts(req)
 		fh.puts(resp)
@@ -62,7 +63,7 @@ ARGF.each_line do |line|
 	req = structure.merge(:messages => messages)
 	resp = HTTParty.post(CHAT_URL, :body => req.to_json, :headers => headers)
 	result = JSON.parse(resp.body)
-	logreq(logdir, CHAT_URL, req, result.to_json)
+	logreq(logdir, chatnum, promptcount, CHAT_URL, req, result.to_json)
 
 	# Show the user the results
 	result["choices"].each do |choice|

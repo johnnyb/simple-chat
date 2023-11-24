@@ -65,14 +65,18 @@ ARGF.each_line do |line|
 	result = JSON.parse(resp.body)
 	logreq(logdir, chatnum, promptcount, CHAT_URL, req, result.to_json)
 
-	# Show the user the results
-	result["choices"].each do |choice|
-		puts "* #{choice["message"]["content"]}"
-	end
-	puts "** #{result["usage"]["prompt_tokens"]} / #{result["usage"]["completion_tokens"]} / #{result["usage"]["total_tokens"]}"
+	begin
+		# Show the user the results
+		result["choices"].each do |choice|
+			puts "* #{choice["message"]["content"]}"
+		end
+		puts "** #{result["usage"]["prompt_tokens"]} / #{result["usage"]["completion_tokens"]} / #{result["usage"]["total_tokens"]}"
 
-	# Put this on the chat list
-	messages.push(result["choices"][0]["message"])
+		# Put this on the chat list
+		messages.push(result["choices"][0]["message"])
+	rescue
+		puts "ERROR!! #{result}"
+	end
 
 	promptcount += 1
 	print "#{promptcount}) "
